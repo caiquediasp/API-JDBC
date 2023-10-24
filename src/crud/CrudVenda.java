@@ -10,9 +10,10 @@ import model.Produto;
 import model.Venda;
 
 public class CrudVenda {
+	Connection connection = null;
+	PreparedStatement preparedStatement = null;
+	
 	public void cadastrarVenda(Venda venda) throws ClassNotFoundException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
 		CrudProduto crudProduto = new CrudProduto();
 		Produto produto = crudProduto.buscarProduto(venda.getIdProduto());
 		
@@ -20,7 +21,7 @@ public class CrudVenda {
 			System.out.println("Venda nao concluida! \nQuantidade para venda é maior que quantidade em estoque!");
 		} else {
 			try {
-				connection = DriverManager.getConnection(Conexao.getJdbcURL(), Conexao.getUser(), Conexao.getPassword());
+				connection = Conexao.getDatabaseConnection();
 				String sql = "INSERT INTO venda(id, dataVenda, quantidade, id_produto) VALUES (?, ?, ?, ?, ?);";
 			
 				preparedStatement = connection.prepareStatement(sql);
@@ -28,6 +29,8 @@ public class CrudVenda {
 				preparedStatement.setString(2, venda.getDataVenda());
 				preparedStatement.setInt(3, venda.getQuantidade());
 				preparedStatement.setInt(4, venda.getIdProduto());
+				
+				preparedStatement.executeUpdate();
 				
 				produto.setQuantidade(produto.getQuantidade() - venda.getQuantidade());
 				
@@ -53,19 +56,19 @@ public class CrudVenda {
 	}
 	
 	public void cancelarVenda(int idVenda) throws ClassNotFoundException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
 		CrudProduto crudProduto = new CrudProduto();
 		Venda venda = buscarVenda(idVenda);
 		Produto produto = crudProduto.buscarProduto(venda.getIdProduto());
 		
 		try {
-			connection = DriverManager.getConnection(Conexao.getJdbcURL(), Conexao.getUser(), Conexao.getPassword());
+			connection = Conexao.getDatabaseConnection();
 			String sql = "DELETE FROM venda WHERE id = ?";
 			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, idVenda);
 			System.out.println("Venda cancelada com sucesso!");
+			
+			preparedStatement.executeUpdate();
 			
 			produto.setQuantidade(venda.getQuantidade() + produto.getQuantidade());
 			
@@ -88,13 +91,11 @@ public class CrudVenda {
 	}
 	
 	public Venda buscarVenda(int idVenda) {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		Venda venda = new Venda();
 
 		try {
-			connection = DriverManager.getConnection(Conexao.getJdbcURL(), Conexao.getUser(), Conexao.getPassword());
+			connection = Conexao.getDatabaseConnection();
 			String sql = "SELECT * FROM venda where id = ?;";
 			
 			preparedStatement = connection.prepareStatement(sql);

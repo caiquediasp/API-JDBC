@@ -1,18 +1,42 @@
 package main;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import crud.Conexao;
 import crud.CrudProduto;
+import crud.CrudVenda;
 import model.Produto;
+import model.Venda;
+
 
 public class Teste {
-
-	public static void main(String[] args) throws Exception {
-		Produto produto = new Produto(1, "teste", 123.3, 41);
-		Produto produto2 = new Produto(2, "esponja", 50.2, 12);
-		CrudProduto crudProduto = new CrudProduto();
+	public static void main(String[] args) {
+		Connection connection = null;
 		
-		crudProduto.inserirProduto(produto);
+		CrudProduto eba = new CrudProduto();
+		Produto produto = new Produto(1, "alpha", 12.2, 56);
+		Produto produto2 = new Produto(2, "beta", 150.0, 15);
 		
-		crudProduto.atualizarProduto(1, produto2);
+		CrudVenda tete = new CrudVenda();
+		Venda venda = new Venda(1, "15/10/2023", 5, 2);
 		
-		crudProduto.buscarProduto(2);
+		try {
+        	connection = Conexao.getDatabaseConnection();
+        	System.out.println("Conexao estabelecida com sucesso!");
+        	
+        	tete.cadastrarVenda(venda);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+				if(connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

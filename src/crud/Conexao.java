@@ -1,19 +1,18 @@
 package crud;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class Conexao {
-	private static String jdbcURL = "jdbc:mysql://localhost:3306/faculdade";
-	private static String user = "caique";
-	private static String password = "12345678";
-	
-	public static String getJdbcURL() {
-		return jdbcURL;
-	}
-	
-	public static String getUser() {
-		return user;
-	}
-	
-	public static String getPassword() {
-		return password;
-	}
+	private static Connection con = null;
+	   private static String USERNAME = "caique";
+	   private static String PASSWORD = "12345678";
+	   private static String DRIVER = "com.mysql.cj.jdbc.Driver";
+	   private static String URL = "jdbc:mysql://127.0.0.1:3306/faculdade";
+
+	   public static Connection getDatabaseConnection() throws Exception{
+	       Class.forName(DRIVER);
+	       return con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+	   }
 }

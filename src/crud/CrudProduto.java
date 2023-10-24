@@ -9,14 +9,12 @@ import java.sql.SQLException;
 import model.Produto;
 
 public class CrudProduto {
+	Connection connection = null;
+	PreparedStatement preparedStatement = null;
 
 	public void inserirProduto(Produto produto) throws ClassNotFoundException {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-
 		try {
-			connection = DriverManager.getConnection(Conexao.getJdbcURL(), Conexao.getUser(), Conexao.getPassword());
+			connection = Conexao.getDatabaseConnection();
 			String sql = "INSERT INTO produto (id, nome, preco, quantidade) VALUES(?, ?, ?, ?);";
 			
 			preparedStatement = connection.prepareStatement(sql);
@@ -24,6 +22,8 @@ public class CrudProduto {
 			preparedStatement.setString(2, produto.getNome());
 			preparedStatement.setDouble(3, produto.getPreco());
 			preparedStatement.setInt(4, produto.getQuantidade());
+			
+			preparedStatement.executeUpdate();
 
 			System.out.println("Produto inserido com sucesso!");
 		} catch (Exception e) {
@@ -43,24 +43,21 @@ public class CrudProduto {
 	}
 
 	public Produto buscarProduto(int idProduto) throws ClassNotFoundException {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		Produto produto = new Produto();
 
 		try {
-			connection = DriverManager.getConnection(Conexao.getJdbcURL(), Conexao.getUser(), Conexao.getPassword());
+			connection = Conexao.getDatabaseConnection();
 			String sql = "SELECT * FROM produto WHERE id = ? ";
 			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, idProduto);
 			resultSet = preparedStatement.executeQuery(sql);
 			while (resultSet.next()) {
-				produto.setId(resultSet.getInt("id"));
-				produto.setNome(resultSet.getString("nome"));
-				produto.setPreco(resultSet.getDouble("preco"));
-				produto.setQuantidade(resultSet.getInt("quantidade"));
+				produto.setId(resultSet.getInt(1));
+				produto.setNome(resultSet.getString(2));
+				produto.setPreco(resultSet.getDouble(3));
+				produto.setQuantidade(resultSet.getInt(4));
 
 				System.out.println(" Id: " + produto.getId() + " - Nome: " + produto.getNome() 
 						+ " - Preco: " + produto.getPreco() + " - Quantidade: " + produto.getQuantidade());
@@ -88,12 +85,9 @@ public class CrudProduto {
 	}
 
 	public void atualizarProduto(int id, Produto produto) throws ClassNotFoundException {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
 
 		try {
-			connection = DriverManager.getConnection(Conexao.getJdbcURL(), Conexao.getUser(), Conexao.getPassword());
+			connection = Conexao.getDatabaseConnection();
 			String sql = "UPDATE produto SET id = ?, nome = ?, preco = ?, quantidade = ? WHERE id = ? ";
 			
 			preparedStatement = connection.prepareStatement(sql);
@@ -102,6 +96,8 @@ public class CrudProduto {
 			preparedStatement.setDouble(3, produto.getPreco());
 			preparedStatement.setInt(4, produto.getQuantidade());
 			preparedStatement.setInt(5, id);
+			
+			preparedStatement.executeUpdate();
 
 			System.out.println("Produto atualizado com sucesso!");
 
@@ -122,12 +118,9 @@ public class CrudProduto {
 	}
 
 	public void excluirProduto(int id) throws ClassNotFoundException {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
 
 		try {
-			connection = DriverManager.getConnection(Conexao.getJdbcURL(), Conexao.getUser(), Conexao.getPassword());
+			connection = Conexao.getDatabaseConnection();
 			String sql = "DELETE FROM produto WHERE id = ? ";
 			
 			preparedStatement = connection.prepareStatement(sql);
