@@ -22,7 +22,7 @@ public class CrudVenda {
 		} else {
 			try {
 				connection = Conexao.getDatabaseConnection();
-				String sql = "INSERT INTO venda(id, dataVenda, quantidade, id_produto) VALUES (?, ?, ?, ?, ?);";
+				String sql = "INSERT INTO venda(id, dataVenda, quantidade, id_produto) VALUES (?, ?, ?, ?);";
 			
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setInt(1, venda.getId());
@@ -100,7 +100,7 @@ public class CrudVenda {
 			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, idVenda);
-			resultSet = preparedStatement.executeQuery(sql);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				venda.setId(resultSet.getInt("id"));
 				venda.setDataVenda(resultSet.getString("dataVenda"));

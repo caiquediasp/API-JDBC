@@ -2,7 +2,7 @@ package crud;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+
 
 public class Conexao {
 	private static Connection con = null;
@@ -15,4 +15,5 @@ public class Conexao {
 	       Class.forName(DRIVER);
 	       return con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
 	   }
+	   
 }

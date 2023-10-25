@@ -1,7 +1,6 @@
 package crud;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,11 +47,10 @@ public class CrudProduto {
 
 		try {
 			connection = Conexao.getDatabaseConnection();
-			String sql = "SELECT * FROM produto WHERE id = ? ";
-			
+			String sql = "SELECT * FROM produto WHERE id = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, idProduto);
-			resultSet = preparedStatement.executeQuery(sql);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				produto.setId(resultSet.getInt(1));
 				produto.setNome(resultSet.getString(2));
