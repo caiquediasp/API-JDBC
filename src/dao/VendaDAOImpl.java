@@ -1,21 +1,21 @@
-package crud;
+package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import conexao.Conexao;
 import model.Produto;
 import model.Venda;
 
-public class CrudVenda {
+public class VendaDAOImpl implements VendaDAO{
 	Connection connection = null;
 	PreparedStatement preparedStatement = null;
 	
 	public void cadastrarVenda(Venda venda) throws ClassNotFoundException {
-		CrudProduto crudProduto = new CrudProduto();
-		Produto produto = crudProduto.buscarProduto(venda.getIdProduto());
+		ProdutoDAOImpl crudProduto = new ProdutoDAOImpl();
+		Produto produto = crudProduto.buscarPorId(venda.getIdProduto());
 		
 		if(produto.getQuantidade() < venda.getQuantidade()) {
 			System.out.println("Venda nao concluida! \nQuantidade para venda é maior que quantidade em estoque!");
@@ -56,9 +56,9 @@ public class CrudVenda {
 	}
 	
 	public void cancelarVenda(int idVenda) throws ClassNotFoundException {
-		CrudProduto crudProduto = new CrudProduto();
+		ProdutoDAOImpl crudProduto = new ProdutoDAOImpl();
 		Venda venda = buscarVenda(idVenda);
-		Produto produto = crudProduto.buscarProduto(venda.getIdProduto());
+		Produto produto = crudProduto.buscarPorId(venda.getIdProduto());
 		
 		try {
 			connection = Conexao.getDatabaseConnection();

@@ -1,13 +1,16 @@
-package crud;
+package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import conexao.Conexao;
 import model.Produto;
 
-public class CrudProduto {
+public class ProdutoDAOImpl implements ProdutoDAO{
 	Connection connection = null;
 	PreparedStatement preparedStatement = null;
 
@@ -40,8 +43,47 @@ public class CrudProduto {
 			}
 		}
 	}
+	
+	public List<Produto> listarProdutos() throws ClassNotFoundException {
+		ResultSet resultSet = null;
+		Produto produto = new Produto();
+		List<Produto> listaProdutos = new ArrayList<>();
 
-	public Produto buscarProduto(int idProduto) throws ClassNotFoundException {
+		try {
+			connection = Conexao.getDatabaseConnection();
+			String sql = "SELECT * FROM produto";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				produto.setId(resultSet.getInt(1));
+				produto.setNome(resultSet.getString(2));
+				produto.setPreco(resultSet.getDouble(3));
+				produto.setQuantidade(resultSet.getInt(4));
+
+				listaProdutos.add(produto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (resultSet != null) {
+					resultSet.close();
+				}
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return listaProdutos;
+	}
+
+	public Produto buscarPorId(int idProduto) throws ClassNotFoundException {
 		ResultSet resultSet = null;
 		Produto produto = new Produto();
 
@@ -56,10 +98,6 @@ public class CrudProduto {
 				produto.setNome(resultSet.getString(2));
 				produto.setPreco(resultSet.getDouble(3));
 				produto.setQuantidade(resultSet.getInt(4));
-
-				System.out.println(" Id: " + produto.getId() + " - Nome: " + produto.getNome() 
-						+ " - Preco: " + produto.getPreco() + " - Quantidade: " + produto.getQuantidade());
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,9 +134,7 @@ public class CrudProduto {
 			preparedStatement.setInt(5, id);
 			
 			preparedStatement.executeUpdate();
-
-			System.out.println("Produto atualizado com sucesso!");
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -124,8 +160,7 @@ public class CrudProduto {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
-
-			System.out.println("Produto excluido com sucesso!");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
