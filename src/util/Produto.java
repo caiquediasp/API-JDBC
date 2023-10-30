@@ -1,4 +1,4 @@
-package model;
+package util;
 
 public class Produto {
 	private int id;
@@ -10,8 +10,7 @@ public class Produto {
 		
 	}
 	
-	public Produto(int id, String nome, double preco, int quantidade) {
-		this.id = id;
+	public Produto(String nome, double preco, int quantidade) {
 		this.nome = nome;
 		this.preco = preco;
 		this.quantidade = quantidade;
@@ -51,10 +50,6 @@ public class Produto {
 
 	@Override
 	public String toString() {
-		return "Produto [id=" + id + ", nome=" + nome + ", preco=" + preco + ", quantidade=" + quantidade + "]";
+		return "Produto [Id = " + id + ", Nome = " + nome + ", Preco = " + preco + ", Quantidade = " + quantidade + "]";
 	}
-	
-	
-	
-	
 }

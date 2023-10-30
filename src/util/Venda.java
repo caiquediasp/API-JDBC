@@ -1,8 +1,10 @@
-package model;
+package util;
+
+import java.util.Date;
 
 public class Venda {
 	private int id;
-	private String dataVenda;
+	private Date dataVenda;
 	private int quantidade;
 	private int idProduto;
 	
@@ -10,9 +12,7 @@ public class Venda {
 		
 	}
 	
-	public Venda(int id, String dataVenda, int quantidade, int idProduto) {
-		super();
-		this.id = id;
+	public Venda(Date dataVenda, int quantidade, int idProduto) {
 		this.dataVenda = dataVenda;
 		this.quantidade = quantidade;
 		this.idProduto = idProduto;
@@ -26,11 +26,11 @@ public class Venda {
 		this.id = id;
 	}
 
-	public String getDataVenda() {
+	public Date getDataVenda() {
 		return dataVenda;
 	}
 
-	public void setDataVenda(String dataVenda) {
+	public void setDataVenda(Date dataVenda) {
 		this.dataVenda = dataVenda;
 	}
 
@@ -50,10 +50,9 @@ public class Venda {
 		this.idProduto = idProduto;
 	}
 
-
 	@Override
 	public String toString() {
-		return "Venda [id=" + id + ", dataVenda=" + dataVenda + ", quantidade=" + quantidade + ", idProduto="
+		return "Venda [Id = " + id + ", Data Venda = " + dataVenda + ", Quantidade = " + quantidade + ", ID Produto = "
 				+ idProduto + "]";
 	}
 }

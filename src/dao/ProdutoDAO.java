@@ -2,16 +2,16 @@ package dao;
 
 import java.util.List;
 
-import model.Produto;
+import util.Produto;
 
 public interface ProdutoDAO {
-	void inserirProduto(Produto produto) throws ClassNotFoundException;
+	void inserirProduto(Produto produto) throws Exception;
 	
-	List<Produto> listarProdutos() throws ClassNotFoundException;
+	List<Produto> listarProdutos() throws Exception;
 	
-	Produto buscarPorId(int idProduto) throws ClassNotFoundException;
+	Produto buscarPorId(int idProduto) throws Exception;
 	
-	void atualizarProduto(int idProduto, Produto produto) throws ClassNotFoundException;
+	void atualizarProduto(Produto produto) throws Exception;
 	
-	void excluirProduto(int idProduto) throws ClassNotFoundException;
+	void excluirProduto(int idProduto) throws Exception;
 }

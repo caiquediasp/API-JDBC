@@ -1,11 +1,11 @@
 package dao;
 
-import model.Venda;
+import util.Venda;
 
 public interface VendaDAO {
-	void cadastrarVenda(Venda venda) throws ClassNotFoundException;
+	void cadastrarVenda(Venda venda) throws Exception;
 	
-	void cancelarVenda(int idVenda) throws ClassNotFoundException;
+	void cancelarVenda(int idVenda) throws Exception;
 	
-	Venda buscarVenda(int idVenda) throws ClassNotFoundException;
+	Venda buscarVenda(int idVenda) throws Exception;
 }

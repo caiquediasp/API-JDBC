@@ -1,50 +1,30 @@
 package controller;
 
-import model.Venda;
+import model.VendaModel;
+import util.Venda;
 import view.VendaView;
 
 public class VendaController {
-	private Venda model;
-	private VendaView view;
+	private VendaModel vendaModel;
+	private VendaView vendaView;
 	
-	public VendaController(Venda model, VendaView view) {
-		this.model = model;
-		this.view = view;
+	public VendaController(VendaModel vendaModel, VendaView vendaView) {
+		this.vendaModel = vendaModel;
+		this.vendaView = vendaView;
 	}
 	
-	public void setVendaId(int id) {
-		model.setId(id);
+	public void cadastrarVenda(Venda venda) throws Exception {
+		vendaModel.cadastrarVenda(venda);
+		vendaView.mensagem("Venda cadastrada com sucesso!");
 	}
 	
-	public int getVendaId() {
-		return model.getId();
+	public void cancelarVenda(int idVenda) throws Exception{
+		vendaModel.cancelarVenda(idVenda);
+		vendaView.mensagem("Venda cancelada com sucesso!");
 	}
 	
-	public void setDataVenda(String dataVenda) {
-		model.setDataVenda(dataVenda);
-	}
-	
-	public String getDataVenda() {
-		return model.getDataVenda();
-	}
-	
-	public void setQuantidadeVenda(int quantidade) {
-		model.setQuantidade(quantidade);
-	}
-	
-	public int getQuantidadeVenda() {
-		return model.getQuantidade();
-	}
-	
-	public void setIdProdutoVenda(int idProduto) {
-		model.setIdProduto(idProduto);
-	}
-	
-	public int getIdProdutoVenda() {
-		return model.getIdProduto();
-	}
-	
-	public void printVenda() {
-		view.printVenda(getVendaId(), getDataVenda(), getQuantidadeVenda(), getIdProdutoVenda());
+	public void buscarVenda(int idVenda) throws Exception {
+		Venda venda = vendaModel.buscarVenda(idVenda);
+		vendaView.mensagem(venda.toString());
 	}
 }

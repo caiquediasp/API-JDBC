@@ -1,19 +1,27 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import conexao.Conexao;
-import model.Produto;
-import model.Venda;
+import util.Produto;
+import util.Venda;
+
+
+
+// --------------------- MUDAR ESSAS VALIDACOESS ---------------------------------
+
+
+
 
 public class VendaDAOImpl implements VendaDAO{
 	Connection connection = null;
 	PreparedStatement preparedStatement = null;
 	
-	public void cadastrarVenda(Venda venda) throws ClassNotFoundException {
+	public void cadastrarVenda(Venda venda) throws Exception {
 		ProdutoDAOImpl crudProduto = new ProdutoDAOImpl();
 		Produto produto = crudProduto.buscarPorId(venda.getIdProduto());
 		
@@ -22,21 +30,18 @@ public class VendaDAOImpl implements VendaDAO{
 		} else {
 			try {
 				connection = Conexao.getDatabaseConnection();
-				String sql = "INSERT INTO venda(id, dataVenda, quantidade, id_produto) VALUES (?, ?, ?, ?);";
+				String sql = "INSERT INTO venda(dataVenda, quantidade, id_produto) VALUES (?, ?, ?);";
 			
 				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, venda.getId());
-				preparedStatement.setString(2, venda.getDataVenda());
-				preparedStatement.setInt(3, venda.getQuantidade());
-				preparedStatement.setInt(4, venda.getIdProduto());
+				preparedStatement.setDate(1, (Date) venda.getDataVenda());;
+				preparedStatement.setInt(2, venda.getQuantidade());
+				preparedStatement.setInt(3, venda.getIdProduto());
 				
 				preparedStatement.executeUpdate();
 				
 				produto.setQuantidade(produto.getQuantidade() - venda.getQuantidade());
 				
-				crudProduto.atualizarProduto(venda.getIdProduto(), produto);
-				
-				System.out.println("Venda realizada com sucesso!");
+				crudProduto.atualizarProduto(produto);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -55,7 +60,7 @@ public class VendaDAOImpl implements VendaDAO{
 		}
 	}
 	
-	public void cancelarVenda(int idVenda) throws ClassNotFoundException {
+	public void cancelarVenda(int idVenda) throws Exception {
 		ProdutoDAOImpl crudProduto = new ProdutoDAOImpl();
 		Venda venda = buscarVenda(idVenda);
 		Produto produto = crudProduto.buscarPorId(venda.getIdProduto());
@@ -72,7 +77,7 @@ public class VendaDAOImpl implements VendaDAO{
 			
 			produto.setQuantidade(venda.getQuantidade() + produto.getQuantidade());
 			
-			crudProduto.atualizarProduto(produto.getId(), produto);
+			crudProduto.atualizarProduto(produto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +95,7 @@ public class VendaDAOImpl implements VendaDAO{
 		}
 	}
 	
-	public Venda buscarVenda(int idVenda) {
+	public Venda buscarVenda(int idVenda) throws Exception{
 		ResultSet resultSet = null;
 		Venda venda = new Venda();
 
@@ -103,13 +108,11 @@ public class VendaDAOImpl implements VendaDAO{
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				venda.setId(resultSet.getInt("id"));
-				venda.setDataVenda(resultSet.getString("dataVenda"));
+				venda.setDataVenda(resultSet.getDate("dataVenda"));
 				venda.setQuantidade(resultSet.getInt("quantidade"));
 				venda.setIdProduto(resultSet.getInt("id_produto"));
-
-				System.out.println(" Id: " + venda.getId() + " - Data Venda: " + venda.getDataVenda() 
-						+ " - Quantidade: " + venda.getQuantidade() + " - Id Produto: " + venda.getIdProduto());
-
+				
+				return venda;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,6 +132,6 @@ public class VendaDAOImpl implements VendaDAO{
 			}
 		}
 		
-		return venda;
+		return null;
 	}
 }

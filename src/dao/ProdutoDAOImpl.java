@@ -8,26 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import conexao.Conexao;
-import model.Produto;
+import util.Produto;
 
 public class ProdutoDAOImpl implements ProdutoDAO{
 	Connection connection = null;
 	PreparedStatement preparedStatement = null;
 
-	public void inserirProduto(Produto produto) throws ClassNotFoundException {
+	@Override
+	public void inserirProduto(Produto produto) throws Exception {
 		try {
 			connection = Conexao.getDatabaseConnection();
-			String sql = "INSERT INTO produto (id, nome, preco, quantidade) VALUES(?, ?, ?, ?);";
+			String sql = "INSERT INTO produto (nome, preco, quantidade) VALUES(?, ?, ?);";
 			
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, produto.getId());
-			preparedStatement.setString(2, produto.getNome());
-			preparedStatement.setDouble(3, produto.getPreco());
-			preparedStatement.setInt(4, produto.getQuantidade());
+			preparedStatement.setString(1, produto.getNome());
+			preparedStatement.setDouble(2, produto.getPreco());
+			preparedStatement.setInt(3, produto.getQuantidade());
 			
 			preparedStatement.executeUpdate();
-
-			System.out.println("Produto inserido com sucesso!");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -44,7 +43,8 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 		}
 	}
 	
-	public List<Produto> listarProdutos() throws ClassNotFoundException {
+	@Override
+	public List<Produto> listarProdutos() throws Exception {
 		ResultSet resultSet = null;
 		Produto produto = new Produto();
 		List<Produto> listaProdutos = new ArrayList<>();
@@ -82,8 +82,9 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 		
 		return listaProdutos;
 	}
-
-	public Produto buscarPorId(int idProduto) throws ClassNotFoundException {
+	
+	@Override
+	public Produto buscarPorId(int idProduto) throws Exception {
 		ResultSet resultSet = null;
 		Produto produto = new Produto();
 
@@ -98,6 +99,8 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 				produto.setNome(resultSet.getString(2));
 				produto.setPreco(resultSet.getDouble(3));
 				produto.setQuantidade(resultSet.getInt(4));
+				
+				return produto;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,21 +120,21 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 			}
 		}
 		
-		return produto;
+		return null;
 	}
 
-	public void atualizarProduto(int id, Produto produto) throws ClassNotFoundException {
+	@Override
+	public void atualizarProduto(Produto produto) throws Exception {
 
 		try {
 			connection = Conexao.getDatabaseConnection();
-			String sql = "UPDATE produto SET id = ?, nome = ?, preco = ?, quantidade = ? WHERE id = ? ";
+			String sql = "UPDATE produto SET nome = ?, preco = ?, quantidade = ? WHERE id = ? ";
 			
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, produto.getId());
-			preparedStatement.setString(2, produto.getNome());
-			preparedStatement.setDouble(3, produto.getPreco());
-			preparedStatement.setInt(4, produto.getQuantidade());
-			preparedStatement.setInt(5, id);
+			preparedStatement.setString(1, produto.getNome());
+			preparedStatement.setDouble(2, produto.getPreco());
+			preparedStatement.setInt(3, produto.getQuantidade());
+			preparedStatement.setInt(4, produto.getId());
 			
 			preparedStatement.executeUpdate();
 			
@@ -151,7 +154,8 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 		}
 	}
 
-	public void excluirProduto(int id) throws ClassNotFoundException {
+	@Override
+	public void excluirProduto(int id) throws Exception {
 
 		try {
 			connection = Conexao.getDatabaseConnection();

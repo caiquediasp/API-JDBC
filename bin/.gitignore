@@ -1,6 +1,5 @@
 /dao/
-/crud/
 /main/
-/conexao/
-/view/
 /controller/
+/util/
+/view/

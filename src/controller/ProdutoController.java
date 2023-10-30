@@ -1,38 +1,47 @@
 package controller;
 
-import dao.ProdutoDAOImpl;
-import model.Produto;
+import java.util.List;
+
+import model.ProdutoModel;
+import util.Produto;
 import view.ProdutoView;
 
 public class ProdutoController {
-	private ProdutoView view = new ProdutoView();
-	public ProdutoDAOImpl crud = new ProdutoDAOImpl();
+	private ProdutoModel produtoModel = new ProdutoModel();
+	private ProdutoView produtoView = new ProdutoView();
 	
-	public void inserirProduto(Produto produto) throws ClassNotFoundException {
-		crud.inserirProduto(produto);
+	public ProdutoController(ProdutoModel produtoModel,ProdutoView produtoView) {
+		this.produtoModel = produtoModel;
+		this.produtoView = produtoView;
 	}
 	
-	public void buscarPorId(int id) throws ClassNotFoundException {
-		view.printProduto(crud.buscarPorId(id));
+	public void inserirProduto(Produto produto) throws Exception {
+		produtoModel.inserirProduto(produto);
+		produtoView.mensagem("Produto cadastrado com sucesso!");
 	}
 	
-	public void listarProdutos() throws ClassNotFoundException {
-		view.listarProdutos(crud.listarProdutos());
+	public void buscarPorId(int id) throws Exception {
+		Produto produto = produtoModel.buscarPorId(id);
+		produtoView.mensagem(produto.toString());
 	}
 	
-	public void atualizarProduto(int id, Produto produto) throws ClassNotFoundException {
-		try {
-			crud.atualizarProduto(id, produto);
-			System.out.println("Produto atualizado com sucesso!");
-		} catch(Exception e) {
-			e.printStackTrace();
+	public void listarProdutos() throws Exception {
+		List<Produto> produto = produtoModel.listarProdutos();
+		if(produto.isEmpty()) {
+			produtoView.mensagem("Nenhum Produto cadastrado!");
+		} else {
+			produtoView.listarProdutos(produto);
 		}
+	}
+	
+	public void atualizarProduto(Produto produto) throws Exception {
+		produtoModel.atualizarProduto(produto);
+		produtoView.mensagem("Produto atualizado com sucesso!");
 		
 	}
 	
-	public void excluirProduto(int id) throws ClassNotFoundException {
-		crud.excluirProduto(id);
-		System.out.println("Produto excluido com sucesso!");
-	}
-	
+	public void excluirProduto(int id) throws Exception {
+		produtoModel.excluirProduto(id);
+		produtoView.mensagem("Produto excluido com sucesso!");
+	}	
 }
