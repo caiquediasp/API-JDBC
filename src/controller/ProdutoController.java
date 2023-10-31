@@ -20,9 +20,9 @@ public class ProdutoController {
 		produtoView.mensagem("Produto cadastrado com sucesso!");
 	}
 	
-	public void buscarPorId(int id) throws Exception {
+	public Produto buscarPorId(int id) throws Exception {
 		Produto produto = produtoModel.buscarPorId(id);
-		produtoView.mensagem(produto.toString());
+		return produto;
 	}
 	
 	public void listarProdutos() throws Exception {

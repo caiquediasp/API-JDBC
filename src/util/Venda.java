@@ -12,8 +12,7 @@ public class Venda {
 		
 	}
 	
-	public Venda(Date dataVenda, int quantidade, int idProduto) {
-		this.dataVenda = dataVenda;
+	public Venda(int quantidade, int idProduto) {
 		this.quantidade = quantidade;
 		this.idProduto = idProduto;
 	}
@@ -29,7 +28,7 @@ public class Venda {
 	public Date getDataVenda() {
 		return dataVenda;
 	}
-
+	
 	public void setDataVenda(Date dataVenda) {
 		this.dataVenda = dataVenda;
 	}

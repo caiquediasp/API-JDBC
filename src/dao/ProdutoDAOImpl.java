@@ -46,7 +46,6 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 	@Override
 	public List<Produto> listarProdutos() throws Exception {
 		ResultSet resultSet = null;
-		Produto produto = new Produto();
 		List<Produto> listaProdutos = new ArrayList<>();
 
 		try {
@@ -55,12 +54,12 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 			preparedStatement = connection.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				produto.setId(resultSet.getInt(1));
-				produto.setNome(resultSet.getString(2));
-				produto.setPreco(resultSet.getDouble(3));
-				produto.setQuantidade(resultSet.getInt(4));
+				int id = resultSet.getInt(1);
+				String nome = resultSet.getString(2);
+				double preco = resultSet.getDouble(3);
+				int quantidade = resultSet.getInt(4);
 
-				listaProdutos.add(produto);
+				listaProdutos.add(new Produto(id, nome, preco, quantidade));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,7 +86,7 @@ public class ProdutoDAOImpl implements ProdutoDAO{
 	public Produto buscarPorId(int idProduto) throws Exception {
 		ResultSet resultSet = null;
 		Produto produto = new Produto();
-
+		
 		try {
 			connection = Conexao.getDatabaseConnection();
 			String sql = "SELECT * FROM produto WHERE id = ?";

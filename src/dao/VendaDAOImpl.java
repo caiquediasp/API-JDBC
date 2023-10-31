@@ -1,21 +1,14 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import conexao.Conexao;
 import util.Produto;
 import util.Venda;
-
-
-
-// --------------------- MUDAR ESSAS VALIDACOESS ---------------------------------
-
-
-
 
 public class VendaDAOImpl implements VendaDAO{
 	Connection connection = null;
@@ -24,38 +17,33 @@ public class VendaDAOImpl implements VendaDAO{
 	public void cadastrarVenda(Venda venda) throws Exception {
 		ProdutoDAOImpl crudProduto = new ProdutoDAOImpl();
 		Produto produto = crudProduto.buscarPorId(venda.getIdProduto());
-		
-		if(produto.getQuantidade() < venda.getQuantidade()) {
-			System.out.println("Venda nao concluida! \nQuantidade para venda é maior que quantidade em estoque!");
-		} else {
-			try {
-				connection = Conexao.getDatabaseConnection();
-				String sql = "INSERT INTO venda(dataVenda, quantidade, id_produto) VALUES (?, ?, ?);";
+		try {
+			connection = Conexao.getDatabaseConnection();
+			String sql = "INSERT INTO venda(dataVenda, quantidade, id_produto) VALUES (?, ?, ?);";
 			
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setDate(1, (Date) venda.getDataVenda());;
-				preparedStatement.setInt(2, venda.getQuantidade());
-				preparedStatement.setInt(3, venda.getIdProduto());
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.now()));;
+			preparedStatement.setInt(2, venda.getQuantidade());
+			preparedStatement.setInt(3, venda.getIdProduto());
 				
-				preparedStatement.executeUpdate();
+			preparedStatement.executeUpdate();
 				
-				produto.setQuantidade(produto.getQuantidade() - venda.getQuantidade());
+			produto.setQuantidade(produto.getQuantidade() - venda.getQuantidade());
 				
-				crudProduto.atualizarProduto(produto);
+			crudProduto.atualizarProduto(produto);
 				
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (preparedStatement != null) {
-						preparedStatement.close();
-					}
-					if (connection != null) {
-						connection.close();
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
 				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -71,7 +59,6 @@ public class VendaDAOImpl implements VendaDAO{
 			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, idVenda);
-			System.out.println("Venda cancelada com sucesso!");
 			
 			preparedStatement.executeUpdate();
 			

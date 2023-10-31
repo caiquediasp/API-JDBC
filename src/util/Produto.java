@@ -15,6 +15,13 @@ public class Produto {
 		this.preco = preco;
 		this.quantidade = quantidade;
 	}
+	
+	public Produto(int id, String nome, double preco, int quantidade) {
+		this.id = id;
+		this.nome = nome;
+		this.preco = preco;
+		this.quantidade = quantidade;
+	}
 
 	public int getId() {
 		return id;
@@ -50,6 +57,6 @@ public class Produto {
 
 	@Override
 	public String toString() {
-		return "Produto [Id = " + id + ", Nome = " + nome + ", Preco = " + preco + ", Quantidade = " + quantidade + "]";
+		return "Produto [Id = " + id + ", Nome = " + nome + ", Preco = R$" + preco + ", Quantidade = " + quantidade + "]";
 	}
 }

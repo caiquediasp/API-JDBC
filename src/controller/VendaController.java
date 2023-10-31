@@ -1,7 +1,10 @@
 package controller;
 
+import model.ProdutoModel;
 import model.VendaModel;
+import util.Produto;
 import util.Venda;
+import view.ProdutoView;
 import view.VendaView;
 
 public class VendaController {
@@ -14,8 +17,15 @@ public class VendaController {
 	}
 	
 	public void cadastrarVenda(Venda venda) throws Exception {
-		vendaModel.cadastrarVenda(venda);
-		vendaView.mensagem("Venda cadastrada com sucesso!");
+		ProdutoController produtoController = new ProdutoController(new ProdutoModel(), new ProdutoView());
+		Produto produto = produtoController.buscarPorId(venda.getIdProduto());
+		
+		if(produto.getQuantidade() < venda.getQuantidade()) {
+			vendaView.mensagem("Venda nao concluida! \nQuantidade para venda é maior que quantidade em estoque!");
+		} else {
+			vendaModel.cadastrarVenda(venda);
+			vendaView.mensagem("Venda cadastrada com sucesso!");
+		}
 	}
 	
 	public void cancelarVenda(int idVenda) throws Exception{
